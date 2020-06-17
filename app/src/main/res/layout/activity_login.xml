@@ -41,7 +41,7 @@
         android:textColorHint="@color/white"
         >
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_password"
             android:textColor="@color/white"
             android:textColorHint="@color/white"

@@ -1,14 +1,23 @@
 package com.prochat.flashchatnewfirebase;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -20,10 +29,10 @@ public class RegisterActivity extends AppCompatActivity {
     // TODO: Add member variables here:
     // UI references.
     private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-
+    private TextInputEditText mPasswordView;
+    private TextInputEditText mConfirmPasswordView;
     // Firebase instance variables
-
+    private FirebaseAuth Auth;
 
 
     @Override
@@ -31,10 +40,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.register_email);
-        mPasswordView = (EditText) findViewById(R.id.register_password);
-        EditText mConfirmPasswordView = (EditText) findViewById(R.id.register_confirm_password);
-        AutoCompleteTextView mUsernameView = (AutoCompleteTextView) findViewById(R.id.register_username);
+        AutoCompleteTextView mUsernameView = findViewById(R.id.register_username);
+        mEmailView = findViewById(R.id.register_email);
+        mPasswordView =  findViewById(R.id.register_password);
+        mConfirmPasswordView  =  findViewById(R.id.register_confirm_password);
+
 
         // Keyboard sign in action
         mConfirmPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -96,7 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else {
             // TODO: Call create FirebaseUser() here
-
+            createFirebaseUser();
         }
     }
 
@@ -107,11 +117,26 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Add own logic to check for a valid password (minimum 6 characters)
-        return true;
+        String confirmPassword = mConfirmPasswordView.getText().toString();
+        return confirmPassword.equals(password) && password.length()>6;
+
     }
 
     // TODO: Create a Firebase user
+        private void createFirebaseUser(){
+            String mEmail = mEmailView.getText().toString();
+            String mPassword = mPasswordView.getText().toString();
+            Auth.createUserWithEmailAndPassword(mEmail,mPassword).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
 
+                    if(!task.isSuccessful()){
+                        Log.d("FlashChat","User creation failed");
+                    }
+                }
+            });
+
+        }
 
     // TODO: Save the display name to Shared Preferences
 
