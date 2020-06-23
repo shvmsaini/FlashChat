@@ -27,8 +27,9 @@
         android:orientation="horizontal"
         android:gravity="bottom">
 
-        <EditText
-            android:id="@+id/messageInput"
+        <com.google.android.material.textfield.TextInputEditText
+
+        android:id="@+id/messageInput"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
