@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // TODO: Add member variables here:
         // UI references.
-
+        keepLoggedIn();
 
         mEmailView =findViewById(R.id.login_email);
         mPasswordView = findViewById(R.id.login_password);
@@ -81,7 +82,17 @@ public class LoginActivity extends AppCompatActivity {
     private void attemptLogin() {
         String email = mEmailView.getText().toString();
         String password = Objects.requireNonNull(mPasswordView.getText()).toString();
-        if(email.equals("")||password.equals("")) return;
+        if(email.equals("")||password.equals("")){
+            View focusView;
+            if (email.equals("")){
+                focusView = mEmailView;
+            } else {
+                focusView = mPasswordView;
+            }
+            Toast.makeText(this,"Email and password are required",Toast.LENGTH_SHORT).show();
+            focusView.requestFocus();
+            return;
+        }
         Toast.makeText(this,"Login in progress...",Toast.LENGTH_SHORT).show();
 
         // TODO: Use FirebaseAuth to sign in with email & password
@@ -97,11 +108,25 @@ public class LoginActivity extends AppCompatActivity {
 
                      Intent intent = new Intent(LoginActivity.this,MainChatActivity.class);
                      finish();
+
                      startActivity(intent);
                  }
              }
          });
 
+
+    }
+    private void keepLoggedIn(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            Intent i = new Intent(LoginActivity.this, MainChatActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        } else {
+            // User is signed out
+            Log.d("FlashChat", "onAuthStateChanged:signed_out");
+        }
 
     }
 

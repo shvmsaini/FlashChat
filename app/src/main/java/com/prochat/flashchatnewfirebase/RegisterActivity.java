@@ -195,7 +195,11 @@ public class RegisterActivity extends AppCompatActivity {
          SharedPreferences prefs = getSharedPreferences(CHAT_PREFS,MODE_PRIVATE);
          prefs.edit().putString(DISPLAY_NAME_KEY,displayName).apply();*/
     }
-
+        public void onBackPressed(){
+        Intent main = new Intent(RegisterActivity.this, LoginActivity.class);
+        finish();
+        startActivity(main);
+        }
     // TODO: Create an alert dialog to show in case registration failed
         private void showErrorDialog(){
          new AlertDialog.Builder(this)

@@ -1,5 +1,7 @@
 package com.prochat.flashchatnewfirebase;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Objects;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -101,6 +104,32 @@ public class MainChatActivity extends AppCompatActivity {
             mDatabaseReference.child("messages").push().setValue(chat);
             mInputText.setText("");
         }
+    }
+    public void onBackPressed(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton("Sign out and Go home",new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface,int i){
+                Intent main = new Intent(MainChatActivity.this, LoginActivity.class);
+                finish();
+                FirebaseAuth.getInstance().signOut();
+                startActivity(main);
+
+            }
+        });
+        builder.setNegativeButton("Close app", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        }).setIcon(android.R.drawable.ic_dialog_alert).show();
+
     }
 
     // TODO: Override the onStart() lifecycle method. Setup the adapter here.
